@@ -1,0 +1,35 @@
+1) What are the advantages and disadvantages of each of the two scheduling policies and the original scheduling policy in XINU?
+
+LINUX SCHEDULER:
+
+Advantages
+1. The linux scheduler schedules a process based on its goodness value and during an epoch the process may only run till it uses up its quantum. By doing so the linux scheduler avoids starvation of low priority processes since a process will always get to execute if it is ready during an epoch.
+2. The linux scheduler also eliminates the possibility of preemption since newly created processes are only scheduled during the next epoch. This again avoids starvation.
+
+Disadvantages
+1. If the priority is changed in between a epoch, then linux scheduler does not take it into consideration till the end of epoch which hampers the responsiveness.
+2. If the process was created in the middle of an epoch, it has to wait till the end of the epoch to get scheduled. This again makes the system less responsive.
+3. Linux scheduler has some storage and computation overheads due to storage of quantum values and goodness values and their computation every time the scheduler is invoked. Since the scheduler is invoked every 10 ticks this overhead may account to a slower OS.
+4. No support for real-time processes.
+
+
+MULTIQ SCHEDULER:
+
+Advantages
+1. Supports real time processes by splitting processes into multiple queues according to their type. Realtime processes are scheduled more often than normal processes to make their response time less and still avoiding starvation.
+2. Same advantages as of Linux scheduler.
+
+Disadvantages
+1. Even more storage overhead and computation overhead than Linux scheduler.
+2. It is not guaranteed to have a 70%-30% distribution of the cpu between real time and normal processes since the random function is actually pseudorandom.
+3. If there are lot of normal processes with large quantum the responsiveness for real time processes decreases since the queues are not switched unless an epoch ends.
+
+Xinu's Default scheduler
+
+Advantages
+1. Very simple and fast scheduler. 
+2. Most responsive of the three since priority change and process creation are immidiately taken into account instead of waiting for an epoch to end.
+
+Disadvantages
+1. The scheduler always schedules highest priority process thus leading to starvation of lower priority processes.
+
